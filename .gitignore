@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native build output (kalau nanti expo prebuild dijalankan)
+android/
+ios/
+
+# Build artifacts
+*.apk
+*.aab
+*.ipa
+
+# Env
+.env
+
+# Editor/OS
+.DS_Store
+.vscode/
+*.log

@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Overstock Clearance",
+    "slug": "clearance-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#E4D9C4"
+    },
+    "android": {
+      "package": "com.yourcompany.clearancemobile",
+      "adaptiveIcon": {
+        "backgroundColor": "#E4D9C4"
+      },
+      "permissions": ["NOTIFICATIONS"]
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#C23B22"
+        }
+      ]
+    ],
+    "extra": {
+      "apiBaseUrl": "http://10.0.2.2:5000/api"
+    }
+  }
+}

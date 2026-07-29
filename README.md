@@ -1,0 +1,79 @@
+# Clearance Mobile App (React Native + Expo)
+
+Shopping app Android yang terhubung ke backend ASP.NET Core yang sama dengan web storefront,
+plus notifikasi flash-sale.
+
+## Menjalankan Secara Lokal
+
+```bash
+npm install
+npx expo start
+```
+
+Lalu:
+- Scan QR code pakai app **Expo Go** di HP Android (paling gampang, tidak butuh Android Studio).
+- Atau tekan `a` di terminal untuk buka di Android Emulator (butuh Android Studio ter-install).
+
+### Penting soal alamat API
+
+Di `app.json`, `apiBaseUrl` di-set ke `http://10.0.2.2:8080/api`.
+
+- `10.0.2.2` adalah alamat khusus yang dipakai **Android Emulator** untuk mengakses
+  `localhost` di komputer host. Kalau pakai emulator, biarkan alamat ini.
+- Kalau pakai **HP fisik** via Expo Go, ganti ke alamat IP lokal komputer Anda, misalnya
+  `http://192.168.1.5:8080/api` (cek dengan `ipconfig`/`ifconfig`), dan pastikan HP & komputer
+  satu jaringan WiFi yang sama.
+
+## Struktur
+
+```
+App.js                              -> entry point, minta izin notifikasi
+src/
+  api/client.js                     -> sama seperti web, tapi token disimpan di AsyncStorage
+  context/                          -> AuthContext, CartContext (mirip web)
+  navigation/index.js               -> Bottom tabs (Katalog/Keranjang/Pesanan) + stack (Login/Register/Checkout)
+  screens/                          -> HomeScreen, LoginScreen, RegisterScreen, CartScreen, CheckoutScreen, OrdersScreen
+  notifications/flashSaleNotifications.js -> setup izin & trigger notifikasi flash-sale
+```
+
+## Soal Notifikasi Flash-Sale
+
+Saat ini `App.js` minta izin notifikasi begitu app dibuka, dan `HomeScreen.js` memicu
+notifikasi **lokal** contoh kalau ada produk dengan `hasActiveFlashSale: true` — ini demo
+sederhana supaya Anda bisa lihat notifikasinya jalan tanpa perlu server push sungguhan.
+
+**Untuk versi produksi nyata**, alurnya begini (teori):
+1. Saat app pertama dibuka, `getExpoPushTokenAsync()` menghasilkan token unik per device.
+2. Token itu dikirim ke backend (butuh endpoint baru, misalnya `POST /api/devices/register`)
+   dan disimpan di tabel `DeviceTokens`.
+3. Saat admin membuat `Discount` baru dengan `IsFlashSale = true`, backend memanggil
+   Expo Push API (`https://exp.host/--/api/v2/push/send`) mengirim ke semua token yang tersimpan.
+4. Notifikasi sampai ke HP user meskipun app sedang ditutup, karena dikirim lewat
+   Firebase Cloud Messaging (Android) di baliknya — Expo yang mengurus koneksi ke FCM.
+
+## Teori: Build APK/AAB Asli & Publish ke Play Store (Tidak Dieksekusi)
+
+Karena project ini pakai Expo, cara build native-nya lewat **EAS Build** (layanan Expo yang
+menjalankan Android SDK/Gradle di cloud, jadi Anda tidak perlu install Android Studio sendiri):
+
+```bash
+npm install -g eas-cli
+eas login
+eas build:configure
+eas build --platform android --profile production
+```
+
+Yang terjadi di baliknya:
+1. EAS Build mengambil kode Anda, menjalankan `expo prebuild` (generate project Android native).
+2. Build dijalankan pakai Android SDK + Gradle di server Expo, menghasilkan file `.aab`
+   (Android App Bundle) — format yang sekarang wajib dipakai Play Store.
+3. File itu perlu ditandatangani (signing) — EAS bisa generate keystore otomatis, atau Anda
+   upload keystore sendiri.
+4. Setelah `.aab` jadi, upload manual ke [Google Play Console](https://play.google.com/console)
+   (perlu akun developer, ~$25 sekali bayar), isi metadata (deskripsi, screenshot, privacy
+   policy, content rating), lalu submit untuk direview Google.
+
+Alternatif kalau tidak mau pakai Expo: build native pakai `react-native` CLI murni,
+lalu jalankan `./gradlew bundleRelease` langsung di komputer sendiri dengan Android SDK
+ter-install — ini yang dimaksud "Android SDK" di deskripsi project awal. Expo dengan EAS
+Build pada dasarnya melakukan hal yang sama, hanya prosesnya di-otomatisasi di cloud.
