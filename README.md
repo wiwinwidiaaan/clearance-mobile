@@ -1,7 +1,24 @@
-# Clearance Mobile App (React Native + Expo)
+# Clearance Mobile
 
-Shopping app Android yang terhubung ke backend ASP.NET Core yang sama dengan web storefront,
-plus notifikasi flash-sale.
+Shopping app Android untuk platform e-commerce clearance sale — marketplace barang
+surplus, retur, dan overstock, dengan notifikasi flash-sale. Dibangun dengan
+React Native (Expo), terhubung ke [Clearance API](https://github.com/wiwinwidiaaan/clearance-api)
+yang sama dengan [Clearance Web](https://github.com/wiwinwidiaaan/clearance-web).
+
+## Tech Stack
+
+- **React Native** + **Expo**
+- **React Navigation** — bottom tabs + stack navigation
+- **Expo Notifications** — push/local notification untuk flash-sale
+- **AsyncStorage** — penyimpanan JWT token di device
+
+## Fitur
+
+- 🏬 Katalog produk dengan filter kategori & pencarian
+- 🛒 Keranjang belanja & checkout terhubung ke backend
+- 🔐 Register & login (JWT disimpan di AsyncStorage)
+- 📋 Riwayat pesanan
+- ⚡ Notifikasi flash-sale (demo lokal, siap dikembangkan jadi push notification sungguhan)
 
 ## Menjalankan Secara Lokal
 
@@ -11,8 +28,12 @@ npx expo start
 ```
 
 Lalu:
+
 - Scan QR code pakai app **Expo Go** di HP Android (paling gampang, tidak butuh Android Studio).
 - Atau tekan `a` di terminal untuk buka di Android Emulator (butuh Android Studio ter-install).
+
+Pastikan [Clearance API](https://github.com/wiwinwidiaaan/clearance-api) sudah jalan
+(lewat `docker compose up`) supaya katalog produk bisa muncul.
 
 ### Penting soal alamat API
 
@@ -24,7 +45,7 @@ Di `app.json`, `apiBaseUrl` di-set ke `http://10.0.2.2:8080/api`.
   `http://192.168.1.5:8080/api` (cek dengan `ipconfig`/`ifconfig`), dan pastikan HP & komputer
   satu jaringan WiFi yang sama.
 
-## Struktur
+## Struktur Project
 
 ```
 App.js                              -> entry point, minta izin notifikasi
@@ -43,6 +64,7 @@ notifikasi **lokal** contoh kalau ada produk dengan `hasActiveFlashSale: true` �
 sederhana supaya Anda bisa lihat notifikasinya jalan tanpa perlu server push sungguhan.
 
 **Untuk versi produksi nyata**, alurnya begini (teori):
+
 1. Saat app pertama dibuka, `getExpoPushTokenAsync()` menghasilkan token unik per device.
 2. Token itu dikirim ke backend (butuh endpoint baru, misalnya `POST /api/devices/register`)
    dan disimpan di tabel `DeviceTokens`.
@@ -64,6 +86,7 @@ eas build --platform android --profile production
 ```
 
 Yang terjadi di baliknya:
+
 1. EAS Build mengambil kode Anda, menjalankan `expo prebuild` (generate project Android native).
 2. Build dijalankan pakai Android SDK + Gradle di server Expo, menghasilkan file `.aab`
    (Android App Bundle) — format yang sekarang wajib dipakai Play Store.
@@ -77,3 +100,12 @@ Alternatif kalau tidak mau pakai Expo: build native pakai `react-native` CLI mur
 lalu jalankan `./gradlew bundleRelease` langsung di komputer sendiri dengan Android SDK
 ter-install — ini yang dimaksud "Android SDK" di deskripsi project awal. Expo dengan EAS
 Build pada dasarnya melakukan hal yang sama, hanya prosesnya di-otomatisasi di cloud.
+
+## Project Terkait
+
+- **[Clearance API](https://github.com/wiwinwidiaaan/clearance-api)** — backend ASP.NET Core
+- **[Clearance Web](https://github.com/wiwinwidiaaan/clearance-web)** — storefront React
+
+## Lisensi
+
+MIT — bebas dipakai sebagai referensi untuk project Anda sendiri.
