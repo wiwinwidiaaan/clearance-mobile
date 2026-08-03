@@ -33,17 +33,20 @@ Lalu:
 - Atau tekan `a` di terminal untuk buka di Android Emulator (butuh Android Studio ter-install).
 
 Pastikan [Clearance API](https://github.com/wiwinwidiaaan/clearance-api) sudah jalan
-(lewat `docker compose up`) supaya katalog produk bisa muncul.
+supaya katalog produk bisa muncul.
 
 ### Penting soal alamat API
 
-Di `app.json`, `apiBaseUrl` di-set ke `http://10.0.2.2:8080/api`.
+Di `app.json`, `apiBaseUrl` di-set ke `http://10.0.2.2:5000/api` (port default
+`dotnet run` tanpa Docker).
 
 - `10.0.2.2` adalah alamat khusus yang dipakai **Android Emulator** untuk mengakses
-  `localhost` di komputer host. Kalau pakai emulator, biarkan alamat ini.
-- Kalau pakai **HP fisik** via Expo Go, ganti ke alamat IP lokal komputer Anda, misalnya
-  `http://192.168.1.5:8080/api` (cek dengan `ipconfig`/`ifconfig`), dan pastikan HP & komputer
-  satu jaringan WiFi yang sama.
+  `localhost` di komputer host. Kalau pakai emulator, biarkan host-nya seperti itu.
+- Kalau backend dijalankan lewat `docker compose up` (biasanya di port `8080`), atau
+  kalau port lokal Anda beda, sesuaikan angka port di `apiBaseUrl` supaya cocok.
+- Kalau pakai **HP fisik** via Expo Go, ganti host ke alamat IP lokal komputer Anda,
+  misalnya `http://192.168.1.5:5000/api` (cek dengan `ipconfig`/`ifconfig`), dan
+  pastikan HP & komputer satu jaringan WiFi yang sama.
 
 ## Struktur Project
 
@@ -52,6 +55,7 @@ App.js                              -> entry point, minta izin notifikasi
 src/
   api/client.js                     -> sama seperti web, tapi token disimpan di AsyncStorage
   context/                          -> AuthContext, CartContext (mirip web)
+  components/                       -> ProductCard
   navigation/index.js               -> Bottom tabs (Katalog/Keranjang/Pesanan) + stack (Login/Register/Checkout)
   screens/                          -> HomeScreen, LoginScreen, RegisterScreen, CartScreen, CheckoutScreen, OrdersScreen
   notifications/flashSaleNotifications.js -> setup izin & trigger notifikasi flash-sale
