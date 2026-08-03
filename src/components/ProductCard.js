@@ -6,21 +6,22 @@ const CONDITION_LABEL = {
   Overstock: "Overstock",
   Returned: "Retur",
   Refurbished: "Refurbished",
-  Damaged: "Cacat Kemasan"
+  Damaged: "Cacat Kemasan",
 };
 
 export function formatRupiah(value) {
   return new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(value);
 }
 
 export default function ProductCard({ product }) {
   const { addItem } = useCart();
   const discountPct = Math.round(
-    ((product.originalPrice - product.currentPrice) / product.originalPrice) * 100
+    ((product.originalPrice - product.currentPrice) / product.originalPrice) *
+      100,
   );
   const outOfStock = product.stockAvailable <= 0;
 
@@ -48,16 +49,22 @@ export default function ProductCard({ product }) {
       </View>
 
       <View style={styles.body}>
-        <Text style={styles.condition}>{CONDITION_LABEL[product.condition]}</Text>
+        <Text style={styles.condition}>
+          {CONDITION_LABEL[product.condition]}
+        </Text>
         <Text style={styles.name} numberOfLines={2}>
           {product.name}
         </Text>
 
         <View style={styles.priceRow}>
           {discountPct > 0 && (
-            <Text style={styles.priceOriginal}>{formatRupiah(product.originalPrice)}</Text>
+            <Text style={styles.priceOriginal}>
+              {formatRupiah(product.originalPrice)}
+            </Text>
           )}
-          <Text style={styles.priceCurrent}>{formatRupiah(product.currentPrice)}</Text>
+          <Text style={styles.priceCurrent}>
+            {formatRupiah(product.currentPrice)}
+          </Text>
         </View>
 
         <View style={styles.footer}>
@@ -84,7 +91,7 @@ const styles = StyleSheet.create({
     borderColor: "#1F1B16",
     marginBottom: 16,
     flex: 1,
-    marginHorizontal: 6
+    marginHorizontal: 6,
   },
   flashBadge: {
     position: "absolute",
@@ -95,19 +102,23 @@ const styles = StyleSheet.create({
     borderColor: "#1F1B16",
     paddingHorizontal: 6,
     paddingVertical: 3,
-    zIndex: 2
+    zIndex: 2,
   },
-  flashBadgeText: { fontSize: 10, fontWeight: "800", color: "#1F1B16" },
+  flashBadgeText: { fontSize: 11, fontWeight: "800", color: "#1F1B16" },
   imageWrap: {
     aspectRatio: 1,
     backgroundColor: "#D8C9AB",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden"
+    overflow: "hidden",
   },
   image: { width: "100%", height: "100%" },
   imagePlaceholder: { justifyContent: "center", alignItems: "center" },
-  imagePlaceholderText: { color: "#4A4139", fontSize: 11, textTransform: "uppercase" },
+  imagePlaceholderText: {
+    color: "#4A4139",
+    fontSize: 12,
+    textTransform: "uppercase",
+  },
   sticker: {
     position: "absolute",
     bottom: -4,
@@ -115,30 +126,43 @@ const styles = StyleSheet.create({
     backgroundColor: "#C23B22",
     paddingHorizontal: 8,
     paddingVertical: 4,
-    transform: [{ rotate: "-6deg" }]
+    transform: [{ rotate: "-6deg" }],
   },
-  stickerText: { color: "white", fontWeight: "800", fontSize: 14 },
-  body: { padding: 12, gap: 4 },
+  stickerText: { color: "white", fontWeight: "800", fontSize: 15 },
+  body: { padding: 12, gap: 5 },
   condition: {
-    fontSize: 10,
+    fontSize: 11,
     color: "#3F6C51",
     fontWeight: "700",
     textTransform: "uppercase",
-    letterSpacing: 0.5
+    letterSpacing: 0.5,
   },
-  name: { fontSize: 14, fontWeight: "700", color: "#1F1B16" },
-  priceRow: { flexDirection: "row", alignItems: "baseline", gap: 6, marginTop: 2 },
-  priceOriginal: { fontSize: 11, color: "#4A4139", textDecorationLine: "line-through" },
-  priceCurrent: { fontSize: 15, fontWeight: "700", color: "#1F1B16" },
+  name: { fontSize: 15, fontWeight: "700", color: "#1F1B16" },
+  priceRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 6,
+    marginTop: 2,
+  },
+  priceOriginal: {
+    fontSize: 12,
+    color: "#4A4139",
+    textDecorationLine: "line-through",
+  },
+  priceCurrent: { fontSize: 17, fontWeight: "700", color: "#1F1B16" },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 8
+    marginTop: 8,
   },
-  stock: { fontSize: 11, color: "#3F6C51", fontWeight: "600" },
+  stock: { fontSize: 12, color: "#3F6C51", fontWeight: "700" },
   stockEmpty: { color: "#C23B22" },
-  addBtn: { backgroundColor: "#1F1B16", paddingHorizontal: 10, paddingVertical: 6 },
+  addBtn: {
+    backgroundColor: "#1F1B16",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
   addBtnDisabled: { opacity: 0.4 },
-  addBtnText: { color: "#E4D9C4", fontSize: 11, fontWeight: "700" }
+  addBtnText: { color: "#E4D9C4", fontSize: 12, fontWeight: "700" },
 });

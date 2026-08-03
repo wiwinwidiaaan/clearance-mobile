@@ -6,14 +6,19 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import { api } from "../api/client";
 import ProductCard from "../components/ProductCard";
 import { triggerLocalFlashSaleDemo } from "../notifications/flashSaleNotifications";
 
-const CATEGORIES = ["Semua", "Elektronik", "Fashion", "Rumah Tangga", "Olahraga"];
+const CATEGORIES = [
+  "Semua",
+  "Elektronik",
+  "Fashion",
+  "Rumah Tangga",
+  "Olahraga",
+];
 
 export default function HomeScreen() {
   const [products, setProducts] = useState([]);
@@ -36,7 +41,10 @@ export default function HomeScreen() {
       // Demo: kalau ada produk flash-sale, picu notifikasi lokal contoh
       const flash = data.find((p) => p.hasActiveFlashSale);
       if (flash) {
-        const pct = Math.round(((flash.originalPrice - flash.currentPrice) / flash.originalPrice) * 100);
+        const pct = Math.round(
+          ((flash.originalPrice - flash.currentPrice) / flash.originalPrice) *
+            100,
+        );
         triggerLocalFlashSaleDemo(flash.name, pct);
       }
     } catch (err) {
@@ -59,20 +67,28 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <View style={styles.hero}>
         <Text style={styles.heroStamp}>EVERYTHING MUST GO</Text>
-        <Text style={styles.heroTitle}>Barang bagus,{"\n"}harga sisa stok.</Text>
+        <Text style={styles.heroTitle}>
+          Barang bagus,{"\n"}harga sisa stok.
+        </Text>
       </View>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryRow}>
+      <View style={[styles.categoryRow, styles.categoryRowContent]}>
         {CATEGORIES.map((c) => (
           <TouchableOpacity
             key={c}
             style={[styles.chip, category === c && styles.chipActive]}
             onPress={() => setCategory(c)}
           >
-            <Text style={[styles.chipText, category === c && styles.chipTextActive]}>{c}</Text>
+            <Text
+              allowFontScaling={false}
+              numberOfLines={2}
+              style={[styles.chipText, category === c && styles.chipTextActive]}
+            >
+              {c}
+            </Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+      </View>
 
       <TextInput
         style={styles.search}
@@ -93,10 +109,14 @@ export default function HomeScreen() {
         keyExtractor={(item) => String(item.id)}
         numColumns={2}
         contentContainerStyle={styles.grid}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({ item }) => <ProductCard product={item} />}
         ListEmptyComponent={
-          !loading && !error ? <Text style={styles.status}>Tidak ada produk yang cocok.</Text> : null
+          !loading && !error ? (
+            <Text style={styles.status}>Tidak ada produk yang cocok.</Text>
+          ) : null
         }
       />
     </View>
@@ -107,7 +127,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#E4D9C4" },
   hero: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 16 },
   heroStamp: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "700",
     color: "#C23B22",
     borderWidth: 1.5,
@@ -116,20 +136,43 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     marginBottom: 10,
-    letterSpacing: 1
+    letterSpacing: 1,
   },
-  heroTitle: { fontSize: 26, fontWeight: "800", color: "#1F1B16", lineHeight: 32 },
-  categoryRow: { paddingHorizontal: 16, marginBottom: 12, flexGrow: 0 },
+  heroTitle: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: "#1F1B16",
+    lineHeight: 34,
+  },
+  categoryRow: {
+    minHeight: 48,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  categoryRowContent: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    paddingVertical: 4,
+    gap: 5,
+  },
   chip: {
+    flex: 1,
     borderWidth: 1.5,
     borderColor: "#1F1B16",
-    paddingHorizontal: 14,
+    paddingHorizontal: 3,
     paddingVertical: 7,
-    marginRight: 8,
-    borderRadius: 2
+    borderRadius: 2,
+    minHeight: 36,
+    justifyContent: "center",
+    alignItems: "center",
   },
   chipActive: { backgroundColor: "#1F1B16" },
-  chipText: { fontSize: 12, fontWeight: "600", color: "#1F1B16" },
+  chipText: {
+    fontSize: 12,
+    fontWeight: "700",
+    color: "#1F1B16",
+    textAlign: "center",
+  },
   chipTextActive: { color: "#E4D9C4" },
   search: {
     marginHorizontal: 16,
@@ -138,10 +181,11 @@ const styles = StyleSheet.create({
     borderColor: "#1F1B16",
     backgroundColor: "white",
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 2
+    paddingVertical: 10,
+    borderRadius: 2,
+    fontSize: 15,
   },
-  status: { textAlign: "center", color: "#4A4139", padding: 20 },
-  statusError: { color: "#C23B22", fontWeight: "600" },
-  grid: { paddingHorizontal: 10, paddingBottom: 20 }
+  status: { textAlign: "center", color: "#4A4139", padding: 20, fontSize: 14 },
+  statusError: { color: "#C23B22", fontWeight: "700" },
+  grid: { paddingHorizontal: 10, paddingBottom: 20 },
 });

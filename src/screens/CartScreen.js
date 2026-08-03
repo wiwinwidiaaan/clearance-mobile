@@ -1,4 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { useCart } from "../context/CartContext";
 import { formatRupiah } from "../components/ProductCard";
 import { useAuth } from "../context/AuthContext";
@@ -14,7 +20,9 @@ export default function CartScreen({ navigation }) {
   if (items.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.empty}>Keranjang masih kosong. Yuk cari barang murah.</Text>
+        <Text style={styles.empty}>
+          Keranjang masih kosong. Yuk cari barang murah.
+        </Text>
       </View>
     );
   }
@@ -30,13 +38,17 @@ export default function CartScreen({ navigation }) {
           <View style={styles.item}>
             <View style={{ flex: 1 }}>
               <Text style={styles.itemName}>{item.product.name}</Text>
-              <Text style={styles.itemPrice}>{formatRupiah(item.product.currentPrice)}</Text>
+              <Text style={styles.itemPrice}>
+                {formatRupiah(item.product.currentPrice)}
+              </Text>
             </View>
 
             <View style={styles.qtyRow}>
               <TouchableOpacity
                 style={styles.qtyBtn}
-                onPress={() => updateQuantity(item.product.id, item.quantity - 1)}
+                onPress={() =>
+                  updateQuantity(item.product.id, item.quantity - 1)
+                }
               >
                 <Text>−</Text>
               </TouchableOpacity>
@@ -44,7 +56,9 @@ export default function CartScreen({ navigation }) {
               <TouchableOpacity
                 style={styles.qtyBtn}
                 disabled={item.quantity >= item.product.stockAvailable}
-                onPress={() => updateQuantity(item.product.id, item.quantity + 1)}
+                onPress={() =>
+                  updateQuantity(item.product.id, item.quantity + 1)
+                }
               >
                 <Text>+</Text>
               </TouchableOpacity>
@@ -72,7 +86,12 @@ export default function CartScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#E4D9C4", padding: 20 },
-  title: { fontSize: 22, fontWeight: "800", color: "#1F1B16", marginBottom: 16 },
+  title: {
+    fontSize: 22,
+    fontWeight: "800",
+    color: "#1F1B16",
+    marginBottom: 16,
+  },
   empty: { textAlign: "center", marginTop: 60, color: "#4A4139" },
   item: {
     flexDirection: "row",
@@ -80,26 +99,39 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#B8A888",
-    gap: 8
+    gap: 8,
   },
-  itemName: { fontWeight: "600", fontSize: 14, color: "#1F1B16" },
-  itemPrice: { fontSize: 12, color: "#4A4139", marginTop: 2 },
+  itemName: { fontWeight: "700", fontSize: 15, color: "#1F1B16" },
+  itemPrice: { fontSize: 13, color: "#4A4139", marginTop: 2 },
   qtyRow: { flexDirection: "row", alignItems: "center", gap: 8 },
   qtyBtn: {
-    width: 26,
-    height: 26,
+    width: 30,
+    height: 30,
     borderWidth: 1.5,
     borderColor: "#1F1B16",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
-  qtyText: { minWidth: 18, textAlign: "center" },
-  remove: { color: "#C23B22", fontSize: 12, fontWeight: "600" },
-  footer: { borderTopWidth: 2, borderTopColor: "#1F1B16", paddingTop: 16, marginTop: 8 },
-  totalRow: { flexDirection: "row", justifyContent: "space-between", marginBottom: 12 },
-  totalLabel: { fontSize: 15 },
-  totalValue: { fontSize: 18, fontWeight: "800" },
-  checkoutBtn: { backgroundColor: "#C23B22", paddingVertical: 14, alignItems: "center" },
-  checkoutBtnText: { color: "white", fontWeight: "700" }
+  qtyText: { minWidth: 20, textAlign: "center", fontSize: 14 },
+  remove: { color: "#C23B22", fontSize: 13, fontWeight: "700" },
+  footer: {
+    borderTopWidth: 2,
+    borderTopColor: "#1F1B16",
+    paddingTop: 16,
+    marginTop: 8,
+  },
+  totalRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12,
+  },
+  totalLabel: { fontSize: 16 },
+  totalValue: { fontSize: 20, fontWeight: "800" },
+  checkoutBtn: {
+    backgroundColor: "#C23B22",
+    paddingVertical: 14,
+    alignItems: "center",
+  },
+  checkoutBtnText: { color: "white", fontWeight: "700", fontSize: 15 },
 });
